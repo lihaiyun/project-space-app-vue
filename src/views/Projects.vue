@@ -25,7 +25,7 @@ const projects = ref([
 </script>
 
 <template>
-  <div class="projects-container">
+  <div>
     <n-h1 style="text-align: center;">My Projects</n-h1>
     <n-grid x-gap="12" y-gap="12" cols="1 s:1 m:2 l:3" responsive="screen" class="mt-4">
       <n-grid-item v-for="project in projects" :key="project.id">
@@ -43,7 +43,4 @@ const projects = ref([
 </template>
 
 <style scoped>
-.projects-container {
-  padding: 2rem;
-}
 </style>
