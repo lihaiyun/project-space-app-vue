@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com', // Example API base URL
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
@@ -59,19 +59,19 @@ export const apiService = {
 // Specific API endpoints
 export const projectsApi = {
   // Get all projects
-  getProjects: () => apiService.get('/posts'), // Using jsonplaceholder as example
+  getProjects: () => apiService.get('/projects'), // Using jsonplaceholder as example
   
   // Get single project
-  getProject: (id: number) => apiService.get(`/posts/${id}`),
-  
+  getProject: (id: number) => apiService.get(`/projects/${id}`),
+
   // Create project
-  createProject: (project: any) => apiService.post('/posts', project),
-  
+  createProject: (project: any) => apiService.post('/projects', project),
+
   // Update project
-  updateProject: (id: number, project: any) => apiService.put(`/posts/${id}`, project),
-  
+  updateProject: (id: number, project: any) => apiService.put(`/projects/${id}`, project),
+
   // Delete project
-  deleteProject: (id: number) => apiService.delete(`/posts/${id}`)
+  deleteProject: (id: number) => apiService.delete(`/projects/${id}`)
 }
 
 export default api
