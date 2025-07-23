@@ -99,7 +99,7 @@ const handleUserDropdown = async (key: string) => {
               <!-- Show user menu when authenticated -->
               <div v-if="isAuthenticated" style="display: flex; align-items: center; gap: 1rem;">
                 <n-dropdown :options="userDropdownOptions" @select="handleUserDropdown">
-                  <n-button text>
+                  <n-button text style="border: none; box-shadow: none; outline: none;" :focusable="false">
                     <template #icon>
                       <Person />
                     </template>
@@ -131,4 +131,11 @@ const handleUserDropdown = async (key: string) => {
 </template>
 
 <style scoped>
+:deep(.n-button:focus),
+:deep(.n-button:active),
+:deep(.n-button:hover) {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
 </style>
