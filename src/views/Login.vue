@@ -79,14 +79,14 @@ const formValue = reactive({
 
 // Yup validation schema
 const validationSchema = yup.object({
-  email: yup
-    .string()
-    .required('Please enter your email')
-    .email('Please enter a valid email address'),
-  password: yup
-    .string()
-    .required('Please enter your password')
-    .min(6, 'Password must be at least 6 characters')
+  email: yup.string()
+    .trim()
+    .required("Email is required")
+    .email("Email must be a valid email address"),
+  password: yup.string()
+    .trim()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
 })
 
 // Convert Yup schema to Naive UI rules
