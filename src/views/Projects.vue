@@ -115,7 +115,7 @@ onMounted(() => {
             {{ project.name }}
           </template>
           
-          <div style="margin: 1rem 0;">
+          <div style="margin: 0.5rem 0;">
             <n-p style="display: flex; align-items: center; gap: 0.5rem;">
               <n-icon><Person /></n-icon>
               Owner: {{ project.owner.name }}
@@ -132,12 +132,8 @@ onMounted(() => {
                 {{ getStatusLabel(project.status) }}
               </n-tag>
             </n-p>
+            <n-p>{{ project.description }}</n-p>
           </div>
-          
-          <n-p>{{ project.description }}</n-p>
-          
-          <n-space>
-          </n-space>
         </n-card>
       </n-grid-item>
     </n-grid>
@@ -146,7 +142,10 @@ onMounted(() => {
 
 <style scoped>
 ::v-deep(.n-card-header) {
-  padding-bottom: 0;
+  padding-bottom: 0.5rem;
 }
 
+::v-deep(.n-p) {
+  margin: 0.5rem 0;
+}
 </style>
