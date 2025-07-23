@@ -3,11 +3,5 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ],
-  "compilerOptions": {
-    "types": ["vue"]
-  },
-  "vueCompilerOptions": {
-    "globalTypesPath": "./src/global.d.ts"
-  }
+  ]
 }
