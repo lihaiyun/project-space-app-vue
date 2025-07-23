@@ -9,7 +9,7 @@ const route = useRoute()
 
 const activeKey = computed(() => route.path)
 
-const menuOptions = [
+const mainMenuOptions = [
   {
     label: 'Home',
     key: '/',
@@ -19,7 +19,10 @@ const menuOptions = [
     label: 'Projects',
     key: '/projects',
     icon: () => h(FolderOpen)
-  },
+  }
+]
+
+const authMenuOptions = [
   {
     label: 'Login',
     key: '/login',
@@ -42,15 +45,27 @@ const handleMenuSelect = (key: string) => {
     <n-message-provider>
       <n-layout>
         <n-layout-header style="padding: 1rem 2rem 0 2rem">
-          <div>
-            <n-menu
-              v-model:value="activeKey"
-              mode="horizontal"
-              :options="menuOptions"
-              @update:value="handleMenuSelect"
-              :root-props="{ style: 'background: transparent; border: none;' }"
-              :item-props="{ style: 'color: white;' }"
-            />
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div>
+              <n-menu
+                v-model:value="activeKey"
+                mode="horizontal"
+                :options="mainMenuOptions"
+                @update:value="handleMenuSelect"
+                :root-props="{ style: 'background: transparent; border: none;' }"
+                :item-props="{ style: 'color: white;' }"
+              />
+            </div>
+            <div style="margin-left: auto;">
+              <n-menu
+                v-model:value="activeKey"
+                mode="horizontal"
+                :options="authMenuOptions"
+                @update:value="handleMenuSelect"
+                :root-props="{ style: 'background: transparent; border: none;' }"
+                :item-props="{ style: 'color: white;' }"
+              />
+            </div>
           </div>
         </n-layout-header>
         
