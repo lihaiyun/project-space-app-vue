@@ -7,8 +7,7 @@ import HelloWorld from '../components/HelloWorld.vue'
   <div style="text-align: center;">
     <n-space vertical size="large">
       <n-card title="Welcome to My Vue App">
-        <div style="text-align: center;">
-          <div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 2rem;">
             <a href="https://vite.dev" target="_blank">
               <img src="/vite.svg" class="logo" alt="Vite logo" />
             </a>
@@ -16,7 +15,6 @@ import HelloWorld from '../components/HelloWorld.vue'
               <img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
             </a>
           </div>
-        </div>
       </n-card>
       
       <HelloWorld msg="Welcome to Home Page" />
