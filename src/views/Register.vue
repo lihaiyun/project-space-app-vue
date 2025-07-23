@@ -7,10 +7,10 @@
         :rules="rules"
         @submit.prevent="handleRegister"
       >
-        <n-form-item label="Full Name" path="fullName">
+        <n-form-item label="Name" path="name">
           <n-input
-            v-model:value="formValue.fullName"
-            placeholder="Enter your full name"
+            v-model:value="formValue.name"
+            placeholder="Enter your name"
             :disabled="loading"
           />
         </n-form-item>
@@ -91,7 +91,7 @@ const formRef = ref<FormInst | null>(null)
 const loading = ref(false)
 
 const formValue = reactive({
-  fullName: '',
+  name: '',
   email: '',
   password: '',
   confirmPassword: ''
@@ -99,37 +99,37 @@ const formValue = reactive({
 
 // Yup validation schema
 const validationSchema = yup.object({
-  fullName: yup
-    .string()
-    .required('Please enter your full name')
+  name: yup
+    .string().trim()
+    .required('Please enter your name')
     .min(2, 'Name must be at least 2 characters')
-    .max(50, 'Name must be less than 50 characters'),
+    .max(50, 'Name must be at most 50 characters')
+    .matches(/^[a-zA-Z '-,.]+$/, 'Name must only contain letters, spaces and characters: \'-,.'),
   email: yup
-    .string()
+    .string().trim()
     .required('Please enter your email')
-    .email('Please enter a valid email address'),
+    .email('Please enter a valid email address')
+    .max(50, 'Email must be at most 50 characters'),
   password: yup
-    .string()
+    .string().trim()
     .required('Please enter your password')
-    .min(6, 'Password must be at least 6 characters')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-    ),
+    .min(8, 'Password must be at least 8 characters')
+    .max(50, 'Password must be at most 50 characters')
+    .matches(/^(?=.*[a-zA-Z])(?=.*[0-9]).*$/, 'Password must contain at least one letter and one number'),
   confirmPassword: yup
-    .string()
+    .string().trim()
     .required('Please confirm your password')
     .oneOf([yup.ref('password')], 'Passwords must match')
 })
 
 // Convert Yup schema to Naive UI rules
 const rules: FormRules = {
-  fullName: [
+  name: [
     {
       required: true,
       validator: async (_rule, value) => {
         try {
-          await validationSchema.validateAt('fullName', { fullName: value })
+          await validationSchema.validateAt('name', { name: value })
         } catch (error: any) {
           throw new Error(error.message)
         }
@@ -194,7 +194,7 @@ const handleRegister = async (e: Event) => {
     
     // Make API call (Yup validation is already handled by the form rules)
     await authApi.register({
-      name: formValue.fullName,
+      name: formValue.name,
       email: formValue.email,
       password: formValue.password
     })
