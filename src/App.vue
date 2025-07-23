@@ -2,7 +2,7 @@
 import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider, NButton, NIcon, NDropdown } from 'naive-ui'
 import { Home, FolderOpen, LogIn, PersonAdd, Person, LogOut } from '@vicons/ionicons5'
 import { useRouter, useRoute } from 'vue-router'
-import { computed, h, watch } from 'vue'
+import { h, watch, ref } from 'vue'
 import { useAuth } from './composables/useAuth'
 import type { Component } from 'vue'
 
@@ -19,7 +19,12 @@ watch(user, (newVal) => {
   console.log('User changed:', newVal)
 }, { immediate: true })
 
-const activeKey = computed(() => route.path)
+const activeKey = ref(route.path)
+
+// Watch route changes to update activeKey
+watch(() => route.path, (newPath) => {
+  activeKey.value = newPath
+}, { immediate: true })
 
 const mainMenuOptions = [
   {
