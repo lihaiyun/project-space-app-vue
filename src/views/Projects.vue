@@ -26,8 +26,9 @@ const projects = ref([
 
 <template>
   <div>
-    <n-h1 style="text-align: center;">My Projects</n-h1>
-    <n-grid x-gap="12" y-gap="12" cols="1 s:1 m:2 l:3" responsive="screen" class="mt-4">
+    <n-h1 style="text-align: center; margin-bottom: 2rem;">My Projects</n-h1>
+
+    <n-grid x-gap="12" y-gap="12" cols="1 s:1 m:2 l:3" responsive="screen">
       <n-grid-item v-for="project in projects" :key="project.id">
         <n-card :title="project.title" hoverable>
           <n-p>{{ project.description }}</n-p>
