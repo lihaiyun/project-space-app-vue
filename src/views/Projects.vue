@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NCard, NGrid, NGridItem, NH1, NP, NTag, NSpace, NSpin } from 'naive-ui'
+import { NCard, NGrid, NGridItem, NH1, NP, NTag, NSpace, NSpin, NIcon } from 'naive-ui'
+import { Person, Calendar } from '@vicons/ionicons5'
 import { projectsApi } from '../services/api'
 
 interface Project {
   id: number
-  title: string
+  name: string
   description: string
-  technologies: string[]
+  dueDate: string
+  status: "not-started" | "in-progress" | "completed"
+  owner: {
+    name: string
+  }
 }
 
 const projects = ref<Project[]>([])
@@ -25,15 +30,45 @@ const fetchProjects = async () => {
     const projectsArray = response.data.projects
     projects.value = projectsArray.map((item: any) => ({
       id: item.id,
-      title: item.title || `Project ${item.id}`,
-      description: (item.description || item.body || 'No description available').substring(0, 100) + '...',
-      technologies: item.technologies || []
+      name: item.name || `Project ${item.id}`,
+      description: item.description || 'No description available',
+      dueDate: item.dueDate || item.due_date || '',
+      status: item.status || 'not-started',
+      owner: {
+        name: item.owner?.name || item.owner || 'Unknown'
+      }
     }))
   } catch (err) {
     error.value = 'Failed to fetch projects'
     console.error('Error fetching projects:', err)
   } finally {
     loading.value = false
+  }
+}
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'not-started':
+      return 'default';
+    case 'in-progress':
+      return 'warning';
+    case 'completed':
+      return 'success';
+    default:
+      return 'default';
+  }
+}
+
+const getStatusLabel = (status: string) => {
+  switch (status) {
+    case 'not-started':
+      return 'Not Started';
+    case 'in-progress':
+      return 'In Progress';
+    case 'completed':
+      return 'Completed';
+    default:
+      return status;
   }
 }
 
@@ -64,11 +99,26 @@ onMounted(() => {
     <!-- Projects grid -->
     <n-grid v-else x-gap="12" y-gap="12" cols="1 s:1 m:2 l:3" responsive="screen">
       <n-grid-item v-for="project in projects" :key="project.id">
-        <n-card :title="project.title" hoverable>
+        <n-card :title="project.name" hoverable>
           <n-p>{{ project.description }}</n-p>
+          
+          <div style="margin: 1rem 0;">
+            <n-p style="display: flex; align-items: center; gap: 0.5rem;">
+              <n-icon><Person /></n-icon>
+              <strong>Owner:</strong> {{ project.owner.name }}
+            </n-p>
+            <n-p style="display: flex; align-items: center; gap: 0.5rem;">
+              <n-icon><Calendar /></n-icon>
+              <strong>Due Date:</strong> {{ project.dueDate || 'Not set' }}
+            </n-p>
+          </div>
+          
           <n-space>
-            <n-tag v-for="tech in project.technologies" :key="tech" type="info">
-              {{ tech }}
+            <n-tag 
+              :type="getStatusColor(project.status)" 
+              :bordered="false"
+            >
+              {{ getStatusLabel(project.status) }}
             </n-tag>
           </n-space>
         </n-card>
