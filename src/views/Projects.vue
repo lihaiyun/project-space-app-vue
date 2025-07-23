@@ -106,6 +106,7 @@ onMounted(() => {
             <n-image 
               :src="project.imageUrl" 
               :alt="project.name"
+              :preview-disabled="true"
               style="width: 100%; aspect-ratio: 16/9; object-fit: cover;"
             />
           </template>
