@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NCard, NGrid, NGridItem, NH1, NP, NTag, NSpace, NSpin, NIcon } from 'naive-ui'
+import { NCard, NGrid, NGridItem, NH1, NP, NTag, NSpace, NSpin, NIcon, NImage } from 'naive-ui'
 import { Person, Calendar } from '@vicons/ionicons5'
 import { projectsApi } from '../services/api'
 
@@ -13,6 +13,7 @@ interface Project {
   owner: {
     name: string
   }
+  imageUrl: string
 }
 
 const projects = ref<Project[]>([])
@@ -36,7 +37,8 @@ const fetchProjects = async () => {
       status: item.status || 'not-started',
       owner: {
         name: item.owner?.name || item.owner || 'Unknown'
-      }
+      },
+      imageUrl: item.imageUrl || item.image_url || ''
     }))
   } catch (err) {
     error.value = 'Failed to fetch projects'
@@ -99,7 +101,19 @@ onMounted(() => {
     <!-- Projects grid -->
     <n-grid v-else x-gap="12" y-gap="12" cols="1 s:1 m:2 l:3" responsive="screen">
       <n-grid-item v-for="project in projects" :key="project.id">
-        <n-card :title="project.name" hoverable>
+        <n-card hoverable>
+          <template #cover v-if="project.imageUrl">
+            <n-image 
+              :src="project.imageUrl" 
+              :alt="project.name"
+              style="width: 100%; aspect-ratio: 16/9; object-fit: cover;"
+            />
+          </template>
+          
+          <template #header>
+            {{ project.name }}
+          </template>
+          
           <div style="margin: 1rem 0;">
             <n-p style="display: flex; align-items: center; gap: 0.5rem;">
               <n-icon><Person /></n-icon>
