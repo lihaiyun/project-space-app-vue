@@ -125,13 +125,12 @@ const handleLogin = async (e: Event) => {
   if (!formRef.value) return
   
   try {
+    // First validate the form - this will prevent submission if validation fails
     await formRef.value.validate()
+    
     loading.value = true
     
-    // Validate with Yup schema
-    await validationSchema.validate(formValue, { abortEarly: false })
-    
-    // Make API call
+    // Make API call (Yup validation is already handled by the form rules)
     const response = await authApi.login({
       email: formValue.email,
       password: formValue.password
@@ -148,12 +147,20 @@ const handleLogin = async (e: Event) => {
   } catch (error: any) {
     console.error('Login error:', error)
     
-    if (error.name === 'ValidationError') {
-      message.error('Please check your input fields')
-    } else if (error.response?.status === 401) {
+    // Check if it's a form validation error (array of validation errors)
+    if (Array.isArray(error) && error.length > 0) {
+      // Form validation failed - don't show message as form will show inline errors
+      return
+    }
+    
+    // Only handle API errors here, validation errors are handled by the form
+    if (error.response?.status === 401) {
       message.error('Invalid email or password')
     } else if (error.response?.status === 422) {
       message.error('Please check your input and try again')
+    } else if (!error.response) {
+      // This means it's likely a validation error from the form
+      message.error('Please check your input fields')
     } else {
       message.error('Login failed. Please try again.')
     }
