@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NCard, NGrid, NGridItem, NH1, NP, NTag, NSpace, NSpin, NIcon, NImage } from 'naive-ui'
+import { NCard, NGrid, NGridItem, NH1, NP, NTag, NSpin, NIcon, NImage } from 'naive-ui'
 import { Person, Calendar } from '@vicons/ionicons5'
 import { projectsApi } from '../services/api'
 
