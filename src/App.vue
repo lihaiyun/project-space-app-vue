@@ -30,7 +30,7 @@ const handleMenuSelect = (key: string) => {
 <template>
   <n-config-provider>
     <n-layout>
-      <n-layout-header class="m-2">
+      <n-layout-header style="padding: 1rem 2rem 0 2rem">
         <div>
           <n-menu
             v-model:value="activeKey"
@@ -43,7 +43,7 @@ const handleMenuSelect = (key: string) => {
         </div>
       </n-layout-header>
       
-      <n-layout-content style="padding: 24px;">
+      <n-layout-content style="padding: 1rem 2rem">
         <router-view />
       </n-layout-content>
     </n-layout>
