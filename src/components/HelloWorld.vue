@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { NCard, NButton, NH1, NP, NA } from 'naive-ui'
 
 defineProps<{ msg: string }>()
 
@@ -7,31 +8,32 @@ const count = ref(0)
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
+  <n-card>
+    <n-h1>{{ msg }}</n-h1>
 
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
-  </div>
+    <div class="card">
+      <n-button type="primary" @click="count++">
+        Count is {{ count }}
+      </n-button>
+      <n-p>
+        Edit <code>components/HelloWorld.vue</code> to test HMR
+      </n-p>
+    </div>
 
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Learn more about IDE Support for Vue in the
-    <a
-      href="https://vuejs.org/guide/scaling-up/tooling.html#ide-support"
-      target="_blank"
-      >Vue Docs Scaling up Guide</a
-    >.
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+    <n-p>
+      Check out
+      <n-a href="https://vuejs.org/guide/quick-start.html#local" target="_blank">
+        create-vue
+      </n-a>, the official Vue + Vite starter
+    </n-p>
+    <n-p>
+      Learn more about IDE Support for Vue in the
+      <n-a href="https://vuejs.org/guide/scaling-up/tooling.html#ide-support" target="_blank">
+        Vue Docs Scaling up Guide
+      </n-a>.
+    </n-p>
+    <n-p class="read-the-docs">Click on the Vite and Vue logos to learn more</n-p>
+  </n-card>
 </template>
 
 <style scoped>

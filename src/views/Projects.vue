@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { NCard, NGrid, NGridItem, NH1, NP, NTag, NSpace } from 'naive-ui'
 
 const projects = ref([
   {
@@ -25,18 +26,19 @@ const projects = ref([
 
 <template>
   <div class="projects-container">
-    <h1>My Projects</h1>
-    <div class="projects-grid">
-      <div v-for="project in projects" :key="project.id" class="project-card">
-        <h3>{{ project.title }}</h3>
-        <p>{{ project.description }}</p>
-        <div class="technologies">
-          <span v-for="tech in project.technologies" :key="tech" class="tech-tag">
-            {{ tech }}
-          </span>
-        </div>
-      </div>
-    </div>
+    <n-h1>My Projects</n-h1>
+    <n-grid :cols="1" :md-cols="2" :lg-cols="3" :gap="24">
+      <n-grid-item v-for="project in projects" :key="project.id">
+        <n-card :title="project.title" hoverable>
+          <n-p>{{ project.description }}</n-p>
+          <n-space>
+            <n-tag v-for="tech in project.technologies" :key="tech" type="info">
+              {{ tech }}
+            </n-tag>
+          </n-space>
+        </n-card>
+      </n-grid-item>
+    </n-grid>
   </div>
 </template>
 

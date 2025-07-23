@@ -1,18 +1,26 @@
 <script setup lang="ts">
+import { NCard, NSpace } from 'naive-ui'
 import HelloWorld from '../components/HelloWorld.vue'
 </script>
 
 <template>
   <div>
-    <div>
-      <a href="https://vite.dev" target="_blank">
-        <img src="/vite.svg" class="logo" alt="Vite logo" />
-      </a>
-      <a href="https://vuejs.org/" target="_blank">
-        <img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
-      </a>
-    </div>
-    <HelloWorld msg="Welcome to Home Page" />
+    <n-space vertical size="large">
+      <n-card title="Welcome to My Vue App">
+        <div style="text-align: center;">
+          <div>
+            <a href="https://vite.dev" target="_blank">
+              <img src="/vite.svg" class="logo" alt="Vite logo" />
+            </a>
+            <a href="https://vuejs.org/" target="_blank">
+              <img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
+            </a>
+          </div>
+        </div>
+      </n-card>
+      
+      <HelloWorld msg="Welcome to Home Page" />
+    </n-space>
   </div>
 </template>
 

@@ -1,72 +1,57 @@
 <script setup lang="ts">
-// No imports needed for router-link and router-view
+import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NSpace, NButton, NIcon } from 'naive-ui'
+import { Home, FolderOpen } from '@vicons/ionicons5'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goToHome = () => router.push('/')
+const goToProjects = () => router.push('/projects')
 </script>
 
 <template>
-  <div id="app">
-    <nav class="navigation">
-      <div class="nav-brand">
-        <h2>My Vue App</h2>
-      </div>
-      <div class="nav-links">
-        <router-link to="/" class="nav-link">Home</router-link>
-        <router-link to="/projects" class="nav-link">Projects</router-link>
-      </div>
-    </nav>
-    
-    <main class="main-content">
-      <router-view />
-    </main>
-  </div>
+  <n-config-provider>
+    <n-layout style="min-height: 100vh;">
+      <n-layout-header style="height: 64px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; background: #001529;">
+        <div style="color: white; font-size: 18px; font-weight: bold;">
+          My Vue App
+        </div>
+        <n-space>
+          <n-button 
+            text 
+            style="color: white;" 
+            @click="goToHome"
+            :class="{ active: $route.path === '/' }"
+          >
+            <template #icon>
+              <n-icon><Home /></n-icon>
+            </template>
+            Home
+          </n-button>
+          <n-button 
+            text 
+            style="color: white;" 
+            @click="goToProjects"
+            :class="{ active: $route.path === '/projects' }"
+          >
+            <template #icon>
+              <n-icon><FolderOpen /></n-icon>
+            </template>
+            Projects
+          </n-button>
+        </n-space>
+      </n-layout-header>
+      
+      <n-layout-content style="padding: 24px;">
+        <router-view />
+      </n-layout-content>
+    </n-layout>
+  </n-config-provider>
 </template>
 
 <style scoped>
-#app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.navigation {
-  background: #2c3e50;
-  color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.nav-brand h2 {
-  margin: 0;
-  color: #ecf0f1;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-}
-
-.nav-link {
-  color: #ecf0f1;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
+.active {
+  background-color: rgba(255, 255, 255, 0.2) !important;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.nav-link:hover {
-  background-color: #34495e;
-}
-
-.nav-link.router-link-active {
-  background-color: #3498db;
-  font-weight: bold;
-}
-
-.main-content {
-  flex: 1;
-  padding: 2rem;
-  background: #f8f9fa;
 }
 </style>
