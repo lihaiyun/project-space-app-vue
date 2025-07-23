@@ -65,7 +65,7 @@ import {
   type FormInst,
   type FormRules
 } from 'naive-ui'
-import { authApi } from '../services/api'
+import { authApi } from '../../services/api'
 
 const router = useRouter()
 const message = useMessage()
