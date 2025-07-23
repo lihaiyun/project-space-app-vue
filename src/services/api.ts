@@ -74,4 +74,21 @@ export const projectsApi = {
   deleteProject: (id: number) => apiService.delete(`/projects/${id}`)
 }
 
+// Authentication API endpoints
+export const authApi = {
+  // User registration
+  register: (userData: { name: string; email: string; password: string }) => 
+    apiService.post('/users/register', userData),
+  
+  // User login
+  login: (credentials: { email: string; password: string }) => 
+    apiService.post('/users/login', credentials),
+
+  // Get current user
+  auth: () => apiService.get('/users/auth'),
+
+  // User logout
+  logout: () => apiService.post('/users/logout')
+}
+
 export default api
