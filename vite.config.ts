@@ -5,4 +5,9 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), tailwindcss()],
+  server: {
+    port: 3000,
+    host: true, // Allow external connections
+    open: true  // Automatically open browser
+  }
 })
