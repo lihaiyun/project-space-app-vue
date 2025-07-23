@@ -100,26 +100,28 @@ onMounted(() => {
     <n-grid v-else x-gap="12" y-gap="12" cols="1 s:1 m:2 l:3" responsive="screen">
       <n-grid-item v-for="project in projects" :key="project.id">
         <n-card :title="project.name" hoverable>
-          <n-p>{{ project.description }}</n-p>
-          
           <div style="margin: 1rem 0;">
             <n-p style="display: flex; align-items: center; gap: 0.5rem;">
               <n-icon><Person /></n-icon>
               <strong>Owner:</strong> {{ project.owner.name }}
             </n-p>
-            <n-p style="display: flex; align-items: center; gap: 0.5rem;">
-              <n-icon><Calendar /></n-icon>
-              <strong>Due Date:</strong> {{ project.dueDate || 'Not set' }}
+            <n-p style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="display: flex; align-items: center; gap: 0.5rem;">
+                <n-icon><Calendar /></n-icon>
+                <strong>Due Date:</strong> {{ project.dueDate || 'Not set' }}
+              </span>
+              <n-tag 
+                :type="getStatusColor(project.status)" 
+                :bordered="false"
+              >
+                {{ getStatusLabel(project.status) }}
+              </n-tag>
             </n-p>
           </div>
           
+          <n-p>{{ project.description }}</n-p>
+          
           <n-space>
-            <n-tag 
-              :type="getStatusColor(project.status)" 
-              :bordered="false"
-            >
-              {{ getStatusLabel(project.status) }}
-            </n-tag>
           </n-space>
         </n-card>
       </n-grid-item>
