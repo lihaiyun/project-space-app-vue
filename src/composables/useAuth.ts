@@ -43,12 +43,29 @@ export const useAuth = () => {
       setLoading(true)
       const response = await authApi.login(credentials)
       
-      // Assuming the API returns user data
+      console.log('Login response:', response.data) // Debug log
+      
+      // Handle different possible response structures
+      let userData = null
       if (response.data.user) {
+        userData = response.data.user
+      } else if (response.data.id) {
+        userData = response.data
+      }
+      
+      if (userData) {
         setUser({
-          id: response.data.user.id,
-          name: response.data.user.name,
-          email: response.data.user.email
+          id: userData.id || 1, // Fallback ID
+          name: userData.name || userData.username || 'User',
+          email: userData.email || credentials.email
+        })
+        console.log('User set:', authState.user) // Debug log
+      } else {
+        // If no user data returned, still set as authenticated with minimal info
+        setUser({
+          id: 1,
+          name: 'User',
+          email: credentials.email
         })
       }
       
@@ -96,11 +113,7 @@ export const useAuth = () => {
       const response = await authApi.auth()
       
       if (response.data) {
-        setUser({
-          id: response.data.id,
-          name: response.data.name,
-          email: response.data.email
-        })
+        setUser(response.data.user)
       }
       
       return response.data

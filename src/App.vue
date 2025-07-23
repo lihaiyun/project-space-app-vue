@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider, NButton, NText, NDropdown } from 'naive-ui'
+import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider, NButton, NIcon, NDropdown } from 'naive-ui'
 import { Home, FolderOpen, LogIn, PersonAdd, Person, LogOut } from '@vicons/ionicons5'
 import { useRouter, useRoute } from 'vue-router'
-import { computed, h } from 'vue'
+import { computed, h, watch } from 'vue'
 import { useAuth } from './composables/useAuth'
+import type { Component } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
 const { user, isAuthenticated, logout } = useAuth()
+
+// Watch for authentication changes
+watch(isAuthenticated, (newVal) => {
+  console.log('Authentication changed:', newVal)
+}, { immediate: true })
+
+watch(user, (newVal) => {
+  console.log('User changed:', newVal)
+}, { immediate: true })
 
 const activeKey = computed(() => route.path)
 
@@ -37,16 +47,19 @@ const authMenuOptions = [
   }
 ]
 
+function renderIcon(icon: Component) {
+  return () => {
+    return h(NIcon, null, {
+      default: () => h(icon)
+    })
+  }
+}
+
 const userDropdownOptions = [
-  {
-    label: 'Profile',
-    key: 'profile',
-    icon: () => h(Person)
-  },
   {
     label: 'Logout',
     key: 'logout',
-    icon: () => h(LogOut)
+    icon: renderIcon(LogOut)
   }
 ]
 
@@ -62,9 +75,6 @@ const handleUserDropdown = async (key: string) => {
     } catch (error) {
       console.error('Logout error:', error)
     }
-  } else if (key === 'profile') {
-    // Handle profile navigation
-    router.push('/profile')
   }
 }
 </script>
@@ -88,13 +98,12 @@ const handleUserDropdown = async (key: string) => {
             <div style="margin-left: auto;">
               <!-- Show user menu when authenticated -->
               <div v-if="isAuthenticated" style="display: flex; align-items: center; gap: 1rem;">
-                <n-text style="color: white;">Welcome, {{ user?.name }}!</n-text>
                 <n-dropdown :options="userDropdownOptions" @select="handleUserDropdown">
-                  <n-button text style="color: white;">
+                  <n-button text>
                     <template #icon>
                       <Person />
                     </template>
-                    {{ user?.email }}
+                    {{ user?.name }}
                   </n-button>
                 </n-dropdown>
               </div>

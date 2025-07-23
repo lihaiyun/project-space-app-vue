@@ -6,7 +6,7 @@ import HelloWorld from '../components/HelloWorld.vue'
 
 const { user, isAuthenticated } = useAuth()
 const welcomeMessage = computed(() => {
-  return isAuthenticated.value ? `Welcome back, ${user.value?.name}!` : 'Welcome to My Vue App'
+  return isAuthenticated.value ? `Welcome, ${user.value?.name}!` : 'Welcome to My Vue App'
 })
 </script>
 
