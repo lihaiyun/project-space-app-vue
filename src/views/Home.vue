@@ -1,12 +1,25 @@
 <script setup lang="ts">
-import { NCard, NSpace } from 'naive-ui'
+import { NCard, NSpace, NText } from 'naive-ui'
+import { computed } from 'vue'
+import { useAuth } from '../composables/useAuth'
 import HelloWorld from '../components/HelloWorld.vue'
+
+const { user, isAuthenticated } = useAuth()
+const welcomeMessage = computed(() => {
+  return isAuthenticated.value ? `Welcome back, ${user.value?.name}!` : 'Welcome to My Vue App'
+})
 </script>
 
 <template>
   <div style="text-align: center;">
     <n-space vertical size="large">
-      <n-card title="Welcome to My Vue App">
+      <n-card :title="welcomeMessage">
+          <div v-if="isAuthenticated" style="margin-bottom: 1rem;">
+            <n-text>
+              You are logged in as: <strong>{{ user?.email }}</strong>
+            </n-text>
+          </div>
+          
           <div style="display: flex; justify-content: center; align-items: center; gap: 2rem;">
             <a href="https://vite.dev" target="_blank">
               <img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -17,7 +30,7 @@ import HelloWorld from '../components/HelloWorld.vue'
           </div>
       </n-card>
       
-      <HelloWorld msg="Welcome to Home Page" />
+      <HelloWorld :msg="isAuthenticated ? `Hello ${user?.name}!` : 'Welcome to Home Page'" />
     </n-space>
   </div>
 </template>

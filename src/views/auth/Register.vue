@@ -11,7 +11,7 @@
           <n-input
             v-model:value="formValue.name"
             placeholder="Enter your name"
-            :disabled="loading"
+            :disabled="isLoading"
           />
         </n-form-item>
         
@@ -19,7 +19,7 @@
           <n-input
             v-model:value="formValue.email"
             placeholder="Enter your email"
-            :disabled="loading"
+            :disabled="isLoading"
           />
         </n-form-item>
         
@@ -29,7 +29,7 @@
             placeholder="Enter your password"
             type="password"
             show-password-on="click"
-            :disabled="loading"
+            :disabled="isLoading"
           />
         </n-form-item>
         
@@ -39,7 +39,7 @@
             placeholder="Confirm your password"
             type="password"
             show-password-on="click"
-            :disabled="loading"
+            :disabled="isLoading"
           />
         </n-form-item>
         
@@ -47,7 +47,7 @@
           <n-button
             type="primary"
             attr-type="submit"
-            :loading="loading"
+            :loading="isLoading"
             style="width: 100%;"
           >
             Register
@@ -83,12 +83,12 @@ import {
   type FormInst,
   type FormRules
 } from 'naive-ui'
-import { authApi } from '../../services/api'
+import { useAuth } from '../../composables/useAuth'
 
 const router = useRouter()
 const message = useMessage()
+const { register, isLoading } = useAuth()
 const formRef = ref<FormInst | null>(null)
-const loading = ref(false)
 
 const formValue = reactive({
   name: '',
@@ -190,10 +190,8 @@ const handleRegister = async (e: Event) => {
     // First validate the form - this will prevent submission if validation fails
     await formRef.value.validate()
     
-    loading.value = true
-    
-    // Make API call (Yup validation is already handled by the form rules)
-    await authApi.register({
+    // Use auth context register method
+    await register({
       name: formValue.name,
       email: formValue.email,
       password: formValue.password
@@ -212,8 +210,6 @@ const handleRegister = async (e: Event) => {
       console.error('Registration error:', error.response)
       message.error(error.response?.data?.message || 'Registration failed. Please try again.')
     }
-  } finally {
-    loading.value = false
   }
 }
 </script>

@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider } from 'naive-ui'
-import { Home, FolderOpen, LogIn, PersonAdd } from '@vicons/ionicons5'
+import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider, NButton, NText, NDropdown } from 'naive-ui'
+import { Home, FolderOpen, LogIn, PersonAdd, Person, LogOut } from '@vicons/ionicons5'
 import { useRouter, useRoute } from 'vue-router'
 import { computed, h } from 'vue'
+import { useAuth } from './composables/useAuth'
 
 const router = useRouter()
 const route = useRoute()
+const { user, isAuthenticated, logout } = useAuth()
 
 const activeKey = computed(() => route.path)
 
@@ -35,8 +37,35 @@ const authMenuOptions = [
   }
 ]
 
+const userDropdownOptions = [
+  {
+    label: 'Profile',
+    key: 'profile',
+    icon: () => h(Person)
+  },
+  {
+    label: 'Logout',
+    key: 'logout',
+    icon: () => h(LogOut)
+  }
+]
+
 const handleMenuSelect = (key: string) => {
   router.push(key)
+}
+
+const handleUserDropdown = async (key: string) => {
+  if (key === 'logout') {
+    try {
+      await logout()
+      router.push('/login')
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+  } else if (key === 'profile') {
+    // Handle profile navigation
+    router.push('/profile')
+  }
 }
 </script>
 
@@ -57,7 +86,22 @@ const handleMenuSelect = (key: string) => {
               />
             </div>
             <div style="margin-left: auto;">
+              <!-- Show user menu when authenticated -->
+              <div v-if="isAuthenticated" style="display: flex; align-items: center; gap: 1rem;">
+                <n-text style="color: white;">Welcome, {{ user?.name }}!</n-text>
+                <n-dropdown :options="userDropdownOptions" @select="handleUserDropdown">
+                  <n-button text style="color: white;">
+                    <template #icon>
+                      <Person />
+                    </template>
+                    {{ user?.email }}
+                  </n-button>
+                </n-dropdown>
+              </div>
+              
+              <!-- Show auth menu when not authenticated -->
               <n-menu
+                v-else
                 v-model:value="activeKey"
                 mode="horizontal"
                 :options="authMenuOptions"
