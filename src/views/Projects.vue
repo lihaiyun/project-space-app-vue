@@ -22,48 +22,16 @@ const fetchProjects = async () => {
     
     // Using the API service
     const response = await projectsApi.getProjects()
-    
-    // Transform API response to match our Project interface
-    // Note: response is already the data due to our interceptor
-    const apiData = Array.isArray(response) ? response : []
-    projects.value = apiData.slice(0, 6).map((item: any, index: number) => ({
+    const projectsArray = response.data.projects
+    projects.value = projectsArray.map((item: any) => ({
       id: item.id,
       title: item.title || `Project ${item.id}`,
-      description: (item.body || 'No description available').substring(0, 100) + '...',
-      technologies: [
-        ['Vue 3', 'TypeScript', 'Vite'],
-        ['Vue 3', 'Pinia', 'Socket.io'],
-        ['Vue 3', 'Chart.js', 'Tailwind CSS'],
-        ['React', 'Node.js', 'MongoDB'],
-        ['Angular', 'Express', 'PostgreSQL'],
-        ['Svelte', 'FastAPI', 'Redis']
-      ][index % 6]
+      description: (item.description || item.body || 'No description available').substring(0, 100) + '...',
+      technologies: item.technologies || []
     }))
   } catch (err) {
     error.value = 'Failed to fetch projects'
     console.error('Error fetching projects:', err)
-    
-    // Fallback to static data if API fails
-    projects.value = [
-      {
-        id: 1,
-        title: 'Vue Portfolio Website',
-        description: 'A personal portfolio website built with Vue 3 and TypeScript',
-        technologies: ['Vue 3', 'TypeScript', 'Vite']
-      },
-      {
-        id: 2,
-        title: 'Task Management App',
-        description: 'A collaborative task management application with real-time updates',
-        technologies: ['Vue 3', 'Pinia', 'Socket.io']
-      },
-      {
-        id: 3,
-        title: 'E-commerce Dashboard',
-        description: 'An admin dashboard for managing e-commerce operations',
-        technologies: ['Vue 3', 'Chart.js', 'Tailwind CSS']
-      }
-    ]
   } finally {
     loading.value = false
   }
