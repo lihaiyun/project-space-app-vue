@@ -82,7 +82,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <n-h1 style="text-align: center; margin-bottom: 2rem;">My Projects</n-h1>
+    <n-h1 style="text-align: center; margin-bottom: 2rem;">Projects</n-h1>
 
     <!-- Loading state -->
     <div v-if="loading" style="text-align: center; padding: 2rem;">
