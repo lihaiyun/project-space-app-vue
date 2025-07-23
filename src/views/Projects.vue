@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NCard, NGrid, NGridItem, NH1, NP, NTag, NSpin, NIcon, NImage } from 'naive-ui'
+import { NCard, NGrid, NGridItem, NH2, NP, NTag, NSpin, NIcon, NImage } from 'naive-ui'
 import { Person, Calendar } from '@vicons/ionicons5'
 import { projectsApi } from '../services/api'
 
@@ -82,7 +82,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <n-h1 style="text-align: center; margin-bottom: 2rem;">Projects</n-h1>
+    <n-h2 style="text-align: center; margin-bottom: 1rem;">Projects</n-h2>
 
     <!-- Loading state -->
     <div v-if="loading" style="text-align: center; padding: 2rem;">
