@@ -29,8 +29,8 @@ const welcomeMessage = computed(() => {
             </a>
           </div>
       </n-card>
-      
-      <HelloWorld :msg="isAuthenticated ? `Hello ${user?.name}!` : 'Welcome to Home Page'" />
+
+      <HelloWorld :msg="'Hello World'" />
     </n-space>
   </div>
 </template>
