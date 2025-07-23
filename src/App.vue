@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NMenu } from 'naive-ui'
-import { Home, FolderOpen } from '@vicons/ionicons5'
+import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider } from 'naive-ui'
+import { Home, FolderOpen, LogIn, PersonAdd } from '@vicons/ionicons5'
 import { useRouter, useRoute } from 'vue-router'
 import { computed, h } from 'vue'
 
@@ -19,6 +19,16 @@ const menuOptions = [
     label: 'Projects',
     key: '/projects',
     icon: () => h(FolderOpen)
+  },
+  {
+    label: 'Login',
+    key: '/login',
+    icon: () => h(LogIn)
+  },
+  {
+    label: 'Register',
+    key: '/register',
+    icon: () => h(PersonAdd)
   }
 ]
 
@@ -29,24 +39,26 @@ const handleMenuSelect = (key: string) => {
 
 <template>
   <n-config-provider>
-    <n-layout>
-      <n-layout-header style="padding: 1rem 2rem 0 2rem">
-        <div>
-          <n-menu
-            v-model:value="activeKey"
-            mode="horizontal"
-            :options="menuOptions"
-            @update:value="handleMenuSelect"
-            :root-props="{ style: 'background: transparent; border: none;' }"
-            :item-props="{ style: 'color: white;' }"
-          />
-        </div>
-      </n-layout-header>
-      
-      <n-layout-content style="padding: 1rem 2rem">
-        <router-view />
-      </n-layout-content>
-    </n-layout>
+    <n-message-provider>
+      <n-layout>
+        <n-layout-header style="padding: 1rem 2rem 0 2rem">
+          <div>
+            <n-menu
+              v-model:value="activeKey"
+              mode="horizontal"
+              :options="menuOptions"
+              @update:value="handleMenuSelect"
+              :root-props="{ style: 'background: transparent; border: none;' }"
+              :item-props="{ style: 'color: white;' }"
+            />
+          </div>
+        </n-layout-header>
+        
+        <n-layout-content style="padding: 1rem 2rem">
+          <router-view />
+        </n-layout-content>
+      </n-layout>
+    </n-message-provider>
   </n-config-provider>
 </template>
 
