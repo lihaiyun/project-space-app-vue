@@ -103,12 +103,12 @@ onMounted(() => {
           <div style="margin: 1rem 0;">
             <n-p style="display: flex; align-items: center; gap: 0.5rem;">
               <n-icon><Person /></n-icon>
-              <strong>Owner:</strong> {{ project.owner.name }}
+              Owner: {{ project.owner.name }}
             </n-p>
             <n-p style="display: flex; align-items: center; justify-content: space-between;">
               <span style="display: flex; align-items: center; gap: 0.5rem;">
                 <n-icon><Calendar /></n-icon>
-                <strong>Due Date:</strong> {{ project.dueDate || 'Not set' }}
+                Due Date: {{ project.dueDate || 'Not set' }}
               </span>
               <n-tag 
                 :type="getStatusColor(project.status)" 
@@ -130,4 +130,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
+::v-deep(.n-card-header) {
+  padding-bottom: 0;
+}
+
 </style>
