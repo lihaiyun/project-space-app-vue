@@ -52,6 +52,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import * as yup from 'yup'
 import { 
   NCard, 
   NForm, 
@@ -64,6 +65,7 @@ import {
   type FormInst,
   type FormRules
 } from 'naive-ui'
+import { authApi } from '../services/api'
 
 const router = useRouter()
 const message = useMessage()
@@ -75,18 +77,43 @@ const formValue = reactive({
   password: ''
 })
 
+// Yup validation schema
+const validationSchema = yup.object({
+  email: yup
+    .string()
+    .required('Please enter your email')
+    .email('Please enter a valid email address'),
+  password: yup
+    .string()
+    .required('Please enter your password')
+    .min(6, 'Password must be at least 6 characters')
+})
+
+// Convert Yup schema to Naive UI rules
 const rules: FormRules = {
   email: [
     {
       required: true,
-      message: 'Please enter your email',
+      validator: async (_rule, value) => {
+        try {
+          await validationSchema.validateAt('email', { email: value })
+        } catch (error: any) {
+          throw new Error(error.message)
+        }
+      },
       trigger: ['input', 'blur']
     }
   ],
   password: [
     {
       required: true,
-      message: 'Please enter your password',
+      validator: async (_rule, value) => {
+        try {
+          await validationSchema.validateAt('password', { password: value })
+        } catch (error: any) {
+          throw new Error(error.message)
+        }
+      },
       trigger: ['input', 'blur']
     }
   ]
@@ -101,25 +128,35 @@ const handleLogin = async (e: Event) => {
     await formRef.value.validate()
     loading.value = true
     
-    // TODO: Implement actual login API call
-    // Example:
-    // const response = await authApi.login({
-    //   email: formValue.email,
-    //   password: formValue.password
-    // })
-    // 
-    // Store auth token
-    // localStorage.setItem('authToken', response.data.token)
+    // Validate with Yup schema
+    await validationSchema.validate(formValue, { abortEarly: false })
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Make API call
+    const response = await authApi.login({
+      email: formValue.email,
+      password: formValue.password
+    })
+    
+    // Store auth token
+    if (response.data.token) {
+      localStorage.setItem('authToken', response.data.token)
+    }
     
     message.success('Login successful!')
     router.push('/')
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Login error:', error)
-    message.error('Login failed. Please check your credentials.')
+    
+    if (error.name === 'ValidationError') {
+      message.error('Please check your input fields')
+    } else if (error.response?.status === 401) {
+      message.error('Invalid email or password')
+    } else if (error.response?.status === 422) {
+      message.error('Please check your input and try again')
+    } else {
+      message.error('Login failed. Please try again.')
+    }
   } finally {
     loading.value = false
   }

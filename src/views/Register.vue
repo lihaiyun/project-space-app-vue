@@ -70,6 +70,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import * as yup from 'yup'
 import { 
   NCard, 
   NForm, 
@@ -82,6 +83,7 @@ import {
   type FormInst,
   type FormRules
 } from 'naive-ui'
+import { authApi } from '../services/api'
 
 const router = useRouter()
 const message = useMessage()
@@ -95,49 +97,85 @@ const formValue = reactive({
   confirmPassword: ''
 })
 
+// Yup validation schema
+const validationSchema = yup.object({
+  fullName: yup
+    .string()
+    .required('Please enter your full name')
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be less than 50 characters'),
+  email: yup
+    .string()
+    .required('Please enter your email')
+    .email('Please enter a valid email address'),
+  password: yup
+    .string()
+    .required('Please enter your password')
+    .min(6, 'Password must be at least 6 characters')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+      'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+    ),
+  confirmPassword: yup
+    .string()
+    .required('Please confirm your password')
+    .oneOf([yup.ref('password')], 'Passwords must match')
+})
+
+// Convert Yup schema to Naive UI rules
 const rules: FormRules = {
   fullName: [
     {
       required: true,
-      message: 'Please enter your full name',
+      validator: async (_rule, value) => {
+        try {
+          await validationSchema.validateAt('fullName', { fullName: value })
+        } catch (error: any) {
+          throw new Error(error.message)
+        }
+      },
       trigger: ['input', 'blur']
     }
   ],
   email: [
     {
       required: true,
-      message: 'Please enter your email',
-      trigger: ['input', 'blur']
-    },
-    {
-      type: 'email',
-      message: 'Please enter a valid email',
+      validator: async (_rule, value) => {
+        try {
+          await validationSchema.validateAt('email', { email: value })
+        } catch (error: any) {
+          throw new Error(error.message)
+        }
+      },
       trigger: ['input', 'blur']
     }
   ],
   password: [
     {
       required: true,
-      message: 'Please enter your password',
-      trigger: ['input', 'blur']
-    },
-    {
-      min: 6,
-      message: 'Password must be at least 6 characters',
+      validator: async (_rule, value) => {
+        try {
+          await validationSchema.validateAt('password', { password: value })
+        } catch (error: any) {
+          throw new Error(error.message)
+        }
+      },
       trigger: ['input', 'blur']
     }
   ],
   confirmPassword: [
     {
       required: true,
-      message: 'Please confirm your password',
-      trigger: ['input', 'blur']
-    },
-    {
-      validator: (_rule, value) => {
-        return value === formValue.password
+      validator: async (_rule, value) => {
+        try {
+          await validationSchema.validateAt('confirmPassword', { 
+            password: formValue.password, 
+            confirmPassword: value 
+          })
+        } catch (error: any) {
+          throw new Error(error.message)
+        }
       },
-      message: 'Passwords do not match',
       trigger: ['input', 'blur']
     }
   ]
@@ -152,23 +190,31 @@ const handleRegister = async (e: Event) => {
     await formRef.value.validate()
     loading.value = true
     
-    // TODO: Implement actual registration API call
-    // Example:
-    // const response = await authApi.register({
-    //   name: formValue.fullName,
-    //   email: formValue.email,
-    //   password: formValue.password
-    // })
+    // Validate with Yup schema
+    await validationSchema.validate(formValue, { abortEarly: false })
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Make API call
+    await authApi.register({
+      name: formValue.fullName,
+      email: formValue.email,
+      password: formValue.password
+    })
     
-    message.success('Registration successful!')
+    message.success('Registration successful! Please log in.')
     router.push('/login')
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Registration error:', error)
-    message.error('Registration failed. Please try again.')
+    
+    if (error.name === 'ValidationError') {
+      message.error('Please check your input fields')
+    } else if (error.response?.status === 409) {
+      message.error('Email already exists. Please use a different email.')
+    } else if (error.response?.status === 422) {
+      message.error('Please check your input and try again')
+    } else {
+      message.error('Registration failed. Please try again.')
+    }
   } finally {
     loading.value = false
   }
