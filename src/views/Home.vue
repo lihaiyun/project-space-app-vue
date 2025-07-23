@@ -4,7 +4,7 @@ import HelloWorld from '../components/HelloWorld.vue'
 </script>
 
 <template>
-  <div>
+  <div style="text-align: center;">
     <n-space vertical size="large">
       <n-card title="Welcome to My Vue App">
         <div style="text-align: center;">
