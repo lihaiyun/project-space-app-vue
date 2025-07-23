@@ -118,7 +118,7 @@ onMounted(() => {
           <div style="margin: 0.5rem 0;">
             <n-p style="display: flex; align-items: center; gap: 0.5rem;">
               <n-icon><Person /></n-icon>
-              Owner: {{ project.owner.name }}
+              {{ project.owner.name }}
             </n-p>
             <n-p style="display: flex; align-items: center; justify-content: space-between;">
               <span style="display: flex; align-items: center; gap: 0.5rem;">
