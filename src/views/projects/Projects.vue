@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NCard, NGrid, NGridItem, NH2, NP, NTag, NSpin, NIcon, NImage } from 'naive-ui'
-import { Person, Calendar } from '@vicons/ionicons5'
+import { NCard, NGrid, NGridItem, NH2, NP, NTag, NSpin, NIcon, NImage, NButton } from 'naive-ui'
+import { Person, Calendar, Create } from '@vicons/ionicons5'
 import { projectsApi } from '../../services/api'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 interface Project {
   id: number
@@ -112,7 +115,19 @@ onMounted(() => {
           </template>
           
           <template #header>
-            {{ project.name }}
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>{{ project.name }}</span>
+              <n-button 
+                text 
+                type="primary"
+                @click="router.push(`/projects/${project.id}/edit`)"
+                style="padding: 4px;"
+              >
+                <template #icon>
+                  <n-icon size="18"><Create /></n-icon>
+                </template>
+              </n-button>
+            </div>
           </template>
           
           <div style="margin: 0.5rem 0;">
