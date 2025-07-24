@@ -15,82 +15,90 @@
 
       <!-- Edit form -->
       <n-form v-else @submit.prevent="onSubmit">
-        <n-form-item label="Project Name" :feedback="errors.name">
-          <n-input
-            v-model:value="name"
-            v-bind="nameAttrs"
-            :status="errors.name ? 'error' : undefined"
-            placeholder="Enter project name"
-            :disabled="submitting"
-          />
-        </n-form-item>
-        
-        <n-form-item label="Description" :feedback="errors.description">
-          <n-input
-            v-model:value="description"
-            v-bind="descriptionAttrs"
-            :status="errors.description ? 'error' : undefined"
-            placeholder="Enter project description"
-            type="textarea"
-            :rows="4"
-            :disabled="submitting"
-          />
-        </n-form-item>
+        <n-grid cols="1 m:2" x-gap="24" responsive="screen">
+          <!-- Left Column - Main Fields -->
+          <n-grid-item>
+            <n-form-item label="Project Name" :feedback="errors.name">
+              <n-input
+                v-model:value="name"
+                v-bind="nameAttrs"
+                :status="errors.name ? 'error' : undefined"
+                placeholder="Enter project name"
+                :disabled="submitting"
+              />
+            </n-form-item>
+            
+            <n-form-item label="Description" :feedback="errors.description">
+              <n-input
+                v-model:value="description"
+                v-bind="descriptionAttrs"
+                :status="errors.description ? 'error' : undefined"
+                placeholder="Enter project description"
+                type="textarea"
+                :rows="4"
+                :disabled="submitting"
+              />
+            </n-form-item>
 
-        <n-form-item label="Due Date" :feedback="errors.dueDate">
-          <n-date-picker
-            v-model:value="dueDate"
-            :status="errors.dueDate ? 'error' : undefined"
-            type="date"
-            placeholder="Select due date"
-            :disabled="submitting"
-            style="width: 100%;"
-            @update:value="dueDateAttrs['onUpdate:value']"
-            @blur="dueDateAttrs.onBlur"
-          />
-        </n-form-item>
+            <n-form-item label="Due Date" :feedback="errors.dueDate">
+              <n-date-picker
+                v-model:value="dueDate"
+                :status="errors.dueDate ? 'error' : undefined"
+                type="date"
+                placeholder="Select due date"
+                :disabled="submitting"
+                style="width: 100%;"
+                @update:value="dueDateAttrs['onUpdate:value']"
+                @blur="dueDateAttrs.onBlur"
+              />
+            </n-form-item>
 
-        <n-form-item label="Status" :feedback="errors.status">
-          <n-select
-            v-model:value="status"
-            :status="errors.status ? 'error' : undefined"
-            placeholder="Select project status"
-            :options="statusOptions"
-            :disabled="submitting"
-            @update:value="statusAttrs['onUpdate:value']"
-            @blur="statusAttrs.onBlur"
-          />
-        </n-form-item>
+            <n-form-item label="Status" :feedback="errors.status">
+              <n-select
+                v-model:value="status"
+                :status="errors.status ? 'error' : undefined"
+                placeholder="Select project status"
+                :options="statusOptions"
+                :disabled="submitting"
+                @update:value="statusAttrs['onUpdate:value']"
+                @blur="statusAttrs.onBlur"
+              />
+            </n-form-item>
 
-        <n-form-item label="Owner" :feedback="errors.owner">
-          <n-input
-            v-model:value="owner"
-            v-bind="ownerAttrs"
-            :status="errors.owner ? 'error' : undefined"
-            placeholder="Enter owner name"
-            :disabled="submitting"
-          />
-        </n-form-item>
+            <n-form-item label="Owner" :feedback="errors.owner">
+              <n-input
+                v-model:value="owner"
+                v-bind="ownerAttrs"
+                :status="errors.owner ? 'error' : undefined"
+                placeholder="Enter owner name"
+                :disabled="submitting"
+              />
+            </n-form-item>
+          </n-grid-item>
 
-        <n-form-item label="Image URL" :feedback="errors.imageUrl">
-          <n-input
-            v-model:value="imageUrl"
-            v-bind="imageUrlAttrs"
-            :status="errors.imageUrl ? 'error' : undefined"
-            placeholder="Enter image URL (optional)"
-            :disabled="submitting"
-          />
-        </n-form-item>
+          <!-- Right Column - Image Fields -->
+          <n-grid-item>
+            <n-form-item label="Image URL" :feedback="errors.imageUrl">
+              <n-input
+                v-model:value="imageUrl"
+                v-bind="imageUrlAttrs"
+                :status="errors.imageUrl ? 'error' : undefined"
+                placeholder="Enter image URL (optional)"
+                :disabled="submitting"
+              />
+            </n-form-item>
 
-        <!-- Image preview -->
-        <n-form-item v-if="imageUrl" label="Preview">
-          <n-image
-            :src="imageUrl"
-            :alt="name || 'Project image'"
-            style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px;"
-            :preview-disabled="false"
-          />
-        </n-form-item>
+            <!-- Image preview -->
+            <n-form-item v-if="imageUrl" label="Preview">
+              <n-image
+                :src="imageUrl"
+                :alt="name || 'Project image'"
+                style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px;"
+                :preview-disabled="false"
+              />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
         
         <n-form-item>
           <div style="display: flex; gap: 1rem; width: 100%;">
@@ -132,6 +140,8 @@ import {
   NDatePicker,
   NSelect,
   NImage,
+  NGrid,
+  NGridItem,
   useMessage
 } from 'naive-ui'
 import { projectsApi } from '../../services/api'
