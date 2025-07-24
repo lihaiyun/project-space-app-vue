@@ -9,11 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.11",
     "@vicons/ionicons5": "^0.13.0",
     "axios": "^1.11.0",
     "naive-ui": "^2.42.0",
-    "tailwindcss": "^4.1.11",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1",
