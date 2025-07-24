@@ -5,6 +5,7 @@ import { Person, Calendar, Create } from '@vicons/ionicons5'
 import { projectsApi } from '../../services/api'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../../composables/useAuth'
+import { format } from 'date-fns'
 
 const router = useRouter()
 const { user } = useAuth()
@@ -85,6 +86,18 @@ const canEditProject = (project: Project) => {
   return user.value && project.owner.id && user.value.id === project.owner.id
 }
 
+const formatDueDate = (dueDate: string | number) => {
+  if (!dueDate) return 'Not set'
+  
+  try {
+    // Handle both timestamp (number) and date string
+    const date = typeof dueDate === 'number' ? new Date(dueDate) : new Date(dueDate)
+    return format(date, 'd MMM yyyy')
+  } catch (error) {
+    return 'Invalid date'
+  }
+}
+
 // Fetch projects when component mounts
 onMounted(() => {
   fetchProjects()
@@ -147,7 +160,7 @@ onMounted(() => {
             <n-p style="display: flex; align-items: center; justify-content: space-between;">
               <span style="display: flex; align-items: center; gap: 0.5rem;">
                 <n-icon><Calendar /></n-icon>
-                Due Date: {{ project.dueDate || 'Not set' }}
+                Due Date: {{ formatDueDate(project.dueDate) }}
               </span>
               <n-tag 
                 :type="getStatusColor(project.status)" 
