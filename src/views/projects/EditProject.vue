@@ -88,6 +88,30 @@
               />
             </n-form-item>
 
+            <!-- File Upload -->
+            <n-form-item label="Or Upload Image">
+              <n-upload
+                :custom-request="handleFileUpload"
+                :show-file-list="false"
+                accept="image/*"
+                :disabled="submitting || uploading"
+              >
+                <n-upload-dragger>
+                  <div style="margin-bottom: 12px">
+                    <n-icon size="48" :depth="3">
+                      <CloudUpload />
+                    </n-icon>
+                  </div>
+                  <n-text style="font-size: 16px">
+                    {{ uploading ? 'Uploading...' : 'Click or drag an image file to this area to upload' }}
+                  </n-text>
+                  <n-p depth="3" style="margin: 8px 0 0 0">
+                    Supports JPG, PNG, GIF files. Max size 10MB.
+                  </n-p>
+                </n-upload-dragger>
+              </n-upload>
+            </n-form-item>
+
             <!-- Image preview -->
             <n-form-item v-if="imageUrl" label="Preview">
               <n-image
@@ -129,6 +153,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
+import { CloudUpload } from '@vicons/ionicons5'
 import { 
   NCard, 
   NForm, 
@@ -142,9 +167,13 @@ import {
   NImage,
   NGrid,
   NGridItem,
+  NUpload,
+  NUploadDragger,
+  NIcon,
+  NText,
   useMessage
 } from 'naive-ui'
-import { projectsApi } from '../../services/api'
+import { projectsApi, fileApi } from '../../services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -154,6 +183,7 @@ const projectId = ref(Array.isArray(route.params.id) ? route.params.id[0] : rout
 const loading = ref(false)
 const submitting = ref(false)
 const error = ref('')
+const uploading = ref(false)
 
 const statusOptions = [
   { label: 'Not Started', value: 'not-started' },
@@ -202,6 +232,33 @@ const [dueDate, dueDateAttrs] = defineField('dueDate')
 const [status, statusAttrs] = defineField('status')
 const [owner, ownerAttrs] = defineField('owner')
 const [imageUrl, imageUrlAttrs] = defineField('imageUrl')
+
+// File upload function
+const handleFileUpload = async (options: any) => {
+  const { file } = options
+  
+  try {
+    uploading.value = true
+    
+    const response = await fileApi.uploadFile(file.file)
+    const { imageUrl: uploadedImageUrl } = response.data
+    
+    // Update the imageUrl field with the uploaded image URL
+    imageUrl.value = uploadedImageUrl
+    
+    message.success('Image uploaded successfully!')
+    
+    return {
+      url: uploadedImageUrl
+    }
+  } catch (error: any) {
+    console.error('Upload error:', error)
+    message.error('Failed to upload image. Please try again.')
+    throw error
+  } finally {
+    uploading.value = false
+  }
+}
 
 // Fetch project data
 const fetchProject = async () => {

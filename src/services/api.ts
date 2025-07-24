@@ -88,4 +88,19 @@ export const authApi = {
   logout: () => apiService.post('/users/logout')
 }
 
+// File upload API endpoints
+export const fileApi = {
+  // Upload file and return imageId and imageUrl
+  uploadFile: (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    return api.post('/files/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  }
+}
+
 export default api
