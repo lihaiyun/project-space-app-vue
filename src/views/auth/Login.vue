@@ -71,8 +71,14 @@ const message = useMessage()
 const { login, isLoading } = useAuth()
 
 const schema = yup.object({
-  email: yup.string().required('Please enter your email').email('Please enter a valid email address').max(50, 'Email must be at most 50 characters'),
-  password: yup.string().required('Please enter your password').min(8, 'Password must be at least 8 characters').max(50, 'Password must be at most 50 characters')
+  email: yup.string().trim()
+    .required('Please enter your email')
+    .email('Please enter a valid email address')
+    .max(50, 'Email must be at most 50 characters'),
+  password: yup.string().trim()
+    .required('Please enter your password')
+    .min(8, 'Password must be at least 8 characters')
+    .max(50, 'Password must be at most 50 characters')
 })
 
 const { handleSubmit, errors, defineField } = useForm({
