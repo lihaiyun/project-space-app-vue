@@ -128,7 +128,7 @@
       </n-form>
 
       <!-- Delete Confirmation Modal -->
-      <n-modal v-model:show="showDeleteConfirmation" preset="dialog" title="Delete Project">
+      <n-modal v-model:show="showDeleteConfirmation" preset="dialog" type="error" title="Delete Project">
         <template #header>
           <div>Delete Project</div>
         </template>
