@@ -4,8 +4,10 @@ import { NCard, NGrid, NGridItem, NH2, NP, NTag, NSpin, NIcon, NImage, NButton }
 import { Person, Calendar, Create } from '@vicons/ionicons5'
 import { projectsApi } from '../../services/api'
 import { useRouter } from 'vue-router'
+import { useAuth } from '../../composables/useAuth'
 
 const router = useRouter()
+const { user } = useAuth()
 
 interface Project {
   id: number
@@ -14,6 +16,7 @@ interface Project {
   dueDate: string
   status: "not-started" | "in-progress" | "completed"
   owner: {
+    id?: number
     name: string
   }
   imageUrl: string
@@ -39,6 +42,7 @@ const fetchProjects = async () => {
       dueDate: item.dueDate || item.due_date || '',
       status: item.status || 'not-started',
       owner: {
+        id: item.owner?.id || item.ownerId || null,
         name: item.owner?.name || item.owner || 'Unknown'
       },
       imageUrl: item.imageUrl || item.image_url || ''
@@ -75,6 +79,10 @@ const getStatusLabel = (status: string) => {
     default:
       return status;
   }
+}
+
+const canEditProject = (project: Project) => {
+  return user.value && project.owner.id && user.value.id === project.owner.id
 }
 
 // Fetch projects when component mounts
@@ -118,6 +126,7 @@ onMounted(() => {
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span>{{ project.name }}</span>
               <n-button 
+                v-if="canEditProject(project)"
                 type="primary" ghost
                 @click="router.push(`/projects/${project.id}/edit`)"
                 style="padding: 8px;"
