@@ -118,14 +118,14 @@ onMounted(() => {
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span>{{ project.name }}</span>
               <n-button 
-                text 
-                type="primary"
+                type="primary" ghost
                 @click="router.push(`/projects/${project.id}/edit`)"
-                style="padding: 4px;"
+                style="padding: 8px;"
               >
                 <template #icon>
                   <n-icon size="18"><Create /></n-icon>
                 </template>
+                Edit
               </n-button>
             </div>
           </template>
