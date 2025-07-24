@@ -64,32 +64,12 @@
                 @blur="statusAttrs.onBlur"
               />
             </n-form-item>
-
-            <n-form-item label="Owner" :feedback="errors.owner">
-              <n-input
-                v-model:value="owner"
-                v-bind="ownerAttrs"
-                :status="errors.owner ? 'error' : undefined"
-                placeholder="Enter owner name"
-                :disabled="submitting"
-              />
-            </n-form-item>
           </n-grid-item>
 
           <!-- Right Column - Image Fields -->
           <n-grid-item>
-            <n-form-item label="Image URL" :feedback="errors.imageUrl">
-              <n-input
-                v-model:value="imageUrl"
-                v-bind="imageUrlAttrs"
-                :status="errors.imageUrl ? 'error' : undefined"
-                placeholder="Enter image URL (optional)"
-                :disabled="submitting"
-              />
-            </n-form-item>
-
             <!-- File Upload -->
-            <n-form-item label="Or Upload Image">
+            <n-form-item label="Upload Image">
               <n-upload
                 :custom-request="handleFileUpload"
                 :show-file-list="false"
@@ -210,11 +190,6 @@ const schema = yup.object({
     .string()
     .required('Please select project status')
     .oneOf(['not-started', 'in-progress', 'completed'], 'Invalid status'),
-  owner: yup
-    .string()
-    .required('Please enter owner name')
-    .min(2, 'Owner name must be at least 2 characters')
-    .max(50, 'Owner name must be at most 50 characters'),
   imageUrl: yup
     .string()
     .url('Please enter a valid URL')
@@ -230,8 +205,7 @@ const [name, nameAttrs] = defineField('name')
 const [description, descriptionAttrs] = defineField('description')
 const [dueDate, dueDateAttrs] = defineField('dueDate')
 const [status, statusAttrs] = defineField('status')
-const [owner, ownerAttrs] = defineField('owner')
-const [imageUrl, imageUrlAttrs] = defineField('imageUrl')
+const [imageUrl] = defineField('imageUrl')
 
 // File upload function
 const handleFileUpload = async (options: any) => {
@@ -280,7 +254,6 @@ const fetchProject = async () => {
       description: project.description || '',
       dueDate: project.dueDate ? new Date(project.dueDate).getTime() : null,
       status: project.status || 'not-started',
-      owner: project.owner?.name || project.owner || '',
       imageUrl: project.imageUrl || project.image_url || ''
     })
     
@@ -306,7 +279,6 @@ const onSubmit = handleSubmit(async (values: any) => {
       description: values.description,
       dueDate: values.dueDate ? new Date(values.dueDate).toISOString().split('T')[0] : null,
       status: values.status,
-      owner: values.owner,
       imageUrl: values.imageUrl || null
     }
     
