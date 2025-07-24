@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { NCard, NGrid, NGridItem, NH2, NP, NTag, NSpin, NIcon, NImage } from 'naive-ui'
 import { Person, Calendar } from '@vicons/ionicons5'
-import { projectsApi } from '../services/api'
+import { projectsApi } from '../../services/api'
 
 interface Project {
   id: number
