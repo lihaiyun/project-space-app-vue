@@ -45,6 +45,7 @@
                 v-model:value="dueDate"
                 :status="errors.dueDate ? 'error' : undefined"
                 type="date"
+                format="dd/MM/yyyy"
                 placeholder="Select due date"
                 :disabled="submitting"
                 style="width: 100%;"
