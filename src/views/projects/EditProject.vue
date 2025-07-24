@@ -115,15 +115,36 @@
               Update Project
             </n-button>
             <n-button
-              @click="$router.go(-1)"
+              type="error" ghost
+              @click="showDeleteConfirmation = true"
               :disabled="submitting"
               style="flex: 1;"
             >
-              Cancel
+              Delete Project
             </n-button>
           </div>
         </n-form-item>
       </n-form>
+
+      <!-- Delete Confirmation Modal -->
+      <n-modal v-model:show="showDeleteConfirmation" preset="dialog" title="Delete Project">
+        <template #header>
+          <div>Delete Project</div>
+        </template>
+        <div>
+          <p>Are you sure you want to delete this project? This action cannot be undone.</p>
+        </div>
+        <template #action>
+          <div style="display: flex; gap: 1rem;">
+            <n-button @click="showDeleteConfirmation = false" :disabled="deleting">
+              Cancel
+            </n-button>
+            <n-button type="error" @click="handleDeleteProject" :loading="deleting">
+              Delete
+            </n-button>
+          </div>
+        </template>
+      </n-modal>
     </n-card>
   </div>
 </template>
@@ -151,6 +172,7 @@ import {
   NUploadDragger,
   NIcon,
   NText,
+  NModal,
   useMessage
 } from 'naive-ui'
 import { projectsApi, fileApi } from '../../services/api'
@@ -164,6 +186,8 @@ const loading = ref(false)
 const submitting = ref(false)
 const error = ref('')
 const uploading = ref(false)
+const showDeleteConfirmation = ref(false)
+const deleting = ref(false)
 
 const statusOptions = [
   { label: 'Not Started', value: 'not-started' },
@@ -231,6 +255,31 @@ const handleFileUpload = async (options: any) => {
     throw error
   } finally {
     uploading.value = false
+  }
+}
+
+// Delete project function
+const handleDeleteProject = async () => {
+  if (!projectId.value) {
+    message.error('Invalid project ID')
+    return
+  }
+
+  try {
+    deleting.value = true
+    
+    await projectsApi.deleteProject(projectId.value)
+    
+    message.success('Project deleted successfully!')
+    showDeleteConfirmation.value = false
+    router.push('/projects')
+    
+  } catch (error: any) {
+    console.error('Delete error:', error)
+    let errorMsg = error.response?.data?.message || 'Failed to delete project. Please try again.'
+    message.error(errorMsg)
+  } finally {
+    deleting.value = false
   }
 }
 
