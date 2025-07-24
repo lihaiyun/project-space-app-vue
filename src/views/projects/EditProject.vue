@@ -154,6 +154,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
+import { format, isValid } from 'date-fns'
 import { CloudUpload } from '@vicons/ionicons5'
 import { 
   NCard, 
@@ -197,28 +198,29 @@ const statusOptions = [
 
 const schema = yup.object({
   name: yup
-    .string()
+    .string().trim()
     .required('Please enter project name')
-    .min(2, 'Project name must be at least 2 characters')
+    .min(3, 'Project name must be at least 3 characters')
     .max(100, 'Project name must be at most 100 characters'),
   description: yup
-    .string()
-    .required('Please enter project description')
-    .min(10, 'Description must be at least 10 characters')
+    .string().trim()
     .max(500, 'Description must be at most 500 characters'),
   dueDate: yup
     .number()
     .nullable()
-    .transform((value) => (isNaN(value) ? null : value)),
+    .transform((value) => (isNaN(value) ? null : value))
+    .test('valid-date', 'Please select a valid due date', function(value) {
+      if (value === null || value === undefined) {
+        return true // Allow null/undefined for optional field
+      }
+      // Check if timestamp creates a valid date
+      const date = new Date(value)
+      return isValid(date)
+    }),
   status: yup
     .string()
     .required('Please select project status')
-    .oneOf(['not-started', 'in-progress', 'completed'], 'Invalid status'),
-  imageUrl: yup
-    .string()
-    .url('Please enter a valid URL')
-    .nullable()
-    .transform((value) => (value === '' ? null : value))
+    .oneOf(['not-started', 'in-progress', 'completed'], 'Invalid status')
 })
 
 const { handleSubmit, errors, defineField, setValues } = useForm({
@@ -326,7 +328,7 @@ const onSubmit = handleSubmit(async (values: any) => {
     const updateData = {
       name: values.name,
       description: values.description,
-      dueDate: values.dueDate ? new Date(values.dueDate).toISOString().split('T')[0] : null,
+      dueDate: values.dueDate ? format(values.dueDate, 'yyyy-MM-dd') : null,
       status: values.status,
       imageUrl: values.imageUrl || null
     }
