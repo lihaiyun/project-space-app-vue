@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
-    <n-card style="max-width: 600px; width: 100%;" title="Edit Project">
+    <n-card title="Edit Project">
       <!-- Loading state -->
       <div v-if="loading" style="text-align: center; padding: 2rem;">
         <n-spin size="large" />
@@ -40,23 +40,25 @@
         <n-form-item label="Due Date" :feedback="errors.dueDate">
           <n-date-picker
             v-model:value="dueDate"
-            v-bind="dueDateAttrs"
             :status="errors.dueDate ? 'error' : undefined"
             type="date"
             placeholder="Select due date"
             :disabled="submitting"
             style="width: 100%;"
+            @update:value="dueDateAttrs['onUpdate:value']"
+            @blur="dueDateAttrs.onBlur"
           />
         </n-form-item>
 
         <n-form-item label="Status" :feedback="errors.status">
           <n-select
             v-model:value="status"
-            v-bind="statusAttrs"
             :status="errors.status ? 'error' : undefined"
             placeholder="Select project status"
             :options="statusOptions"
             :disabled="submitting"
+            @update:value="statusAttrs['onUpdate:value']"
+            @blur="statusAttrs.onBlur"
           />
         </n-form-item>
 
@@ -81,15 +83,13 @@
         </n-form-item>
 
         <!-- Image preview -->
-        <n-form-item v-if="imageUrl">
-          <div style="text-align: center;">
-            <n-image
-              :src="imageUrl"
-              :alt="name || 'Project image'"
-              style="max-width: 300px; max-height: 200px; border-radius: 8px;"
-              :preview-disabled="false"
-            />
-          </div>
+        <n-form-item v-if="imageUrl" label="Preview">
+          <n-image
+            :src="imageUrl"
+            :alt="name || 'Project image'"
+            style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px;"
+            :preview-disabled="false"
+          />
         </n-form-item>
         
         <n-form-item>
@@ -140,7 +140,7 @@ const router = useRouter()
 const route = useRoute()
 const message = useMessage()
 
-const projectId = ref(Number(route.params.id))
+const projectId = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)
 const loading = ref(false)
 const submitting = ref(false)
 const error = ref('')
@@ -195,6 +195,11 @@ const [imageUrl, imageUrlAttrs] = defineField('imageUrl')
 
 // Fetch project data
 const fetchProject = async () => {
+  if (!projectId.value) {
+    error.value = 'Invalid project ID'
+    return
+  }
+
   try {
     loading.value = true
     error.value = ''
@@ -221,6 +226,11 @@ const fetchProject = async () => {
 }
 
 const onSubmit = handleSubmit(async (values: any) => {
+  if (!projectId.value) {
+    message.error('Invalid project ID')
+    return
+  }
+
   try {
     submitting.value = true
     

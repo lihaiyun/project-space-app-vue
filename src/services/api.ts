@@ -59,16 +59,16 @@ export const projectsApi = {
   getProjects: () => apiService.get('/projects'), // Using jsonplaceholder as example
   
   // Get single project
-  getProject: (id: number) => apiService.get(`/projects/${id}`),
+  getProject: (id: string) => apiService.get(`/projects/${id}`),
 
   // Create project
   createProject: (project: any) => apiService.post('/projects', project),
 
   // Update project
-  updateProject: (id: number, project: any) => apiService.put(`/projects/${id}`, project),
+  updateProject: (id: string, project: any) => apiService.put(`/projects/${id}`, project),
 
   // Delete project
-  deleteProject: (id: number) => apiService.delete(`/projects/${id}`)
+  deleteProject: (id: string) => apiService.delete(`/projects/${id}`)
 }
 
 // Authentication API endpoints
