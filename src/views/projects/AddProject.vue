@@ -185,7 +185,7 @@ const { handleSubmit, errors, defineField } = useForm({
   initialValues: {
     name: '',
     description: '',
-    dueDate: new Date().getTime(),
+    dueDate: null,
     status: 'not-started',
     imageUrl: ''
   }
