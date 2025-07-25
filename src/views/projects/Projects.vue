@@ -141,12 +141,11 @@ onMounted(() => {
         @keyup.enter="handleSearch"
         @clear="clearSearch"
       >
-        <template #prefix>
-          <n-icon><Search /></n-icon>
-        </template>
         <template #suffix>
-          <n-button text @click="handleSearch" style="padding: 0;">
-            Search
+          <n-button text @click="handleSearch" style="padding: 4px;">
+            <template #icon>
+              <n-icon><Search /></n-icon>
+            </template>
           </n-button>
         </template>
       </n-input>
