@@ -40,9 +40,6 @@
                 @update:value="dueDateAttrs['onUpdate:value']"
                 @blur="dueDateAttrs.onBlur"
               />
-              <n-p v-if="dueDate" depth="3" style="margin-top: 4px; font-size: 12px;">
-                Selected: {{ format(new Date(dueDate), 'dd/MM/yyyy') }}
-              </n-p>
             </n-form-item>
 
             <n-form-item label="Status" :feedback="errors.status">
@@ -170,12 +167,9 @@ const schema = yup.object({
     .max(500, 'Description must be at most 500 characters'),
   dueDate: yup
     .number()
-    .nullable()
+    .required('Please select a due date')
     .transform((value) => (isNaN(value) ? null : value))
     .test('valid-date', 'Please select a valid due date', function(value) {
-      if (value === null || value === undefined) {
-        return true // Allow null/undefined for optional field
-      }
       // Check if timestamp creates a valid date
       const date = new Date(value)
       return isValid(date)
@@ -191,7 +185,7 @@ const { handleSubmit, errors, defineField } = useForm({
   initialValues: {
     name: '',
     description: '',
-    dueDate: null,
+    dueDate: new Date().getTime(),
     status: 'not-started',
     imageUrl: ''
   }

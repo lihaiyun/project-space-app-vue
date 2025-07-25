@@ -208,12 +208,9 @@ const schema = yup.object({
     .max(500, 'Description must be at most 500 characters'),
   dueDate: yup
     .number()
-    .nullable()
+    .required('Please select a due date')
     .transform((value) => (isNaN(value) ? null : value))
     .test('valid-date', 'Please select a valid due date', function(value) {
-      if (value === null || value === undefined) {
-        return true // Allow null/undefined for optional field
-      }
       // Check if timestamp creates a valid date
       const date = new Date(value)
       return isValid(date)
