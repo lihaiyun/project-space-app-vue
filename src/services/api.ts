@@ -56,7 +56,10 @@ export const apiService = {
 // Specific API endpoints
 export const projectsApi = {
   // Get all projects
-  getProjects: () => apiService.get('/projects'), // Using jsonplaceholder as example
+  getProjects: (search?: string) => {
+    const params = search ? { search } : undefined
+    return apiService.get('/projects', params)
+  },
   
   // Get single project
   getProject: (id: string) => apiService.get(`/projects/${id}`),

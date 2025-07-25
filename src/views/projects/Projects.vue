@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NCard, NGrid, NGridItem, NH2, NP, NTag, NSpin, NIcon, NImage, NButton } from 'naive-ui'
-import { Person, Calendar, Create, Add } from '@vicons/ionicons5'
+import { NCard, NGrid, NGridItem, NH2, NP, NTag, NSpin, NIcon, NImage, NButton, NInput } from 'naive-ui'
+import { Person, Calendar, Create, Add, Search } from '@vicons/ionicons5'
 import { projectsApi } from '../../services/api'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../../composables/useAuth'
@@ -26,15 +26,16 @@ interface Project {
 const projects = ref<Project[]>([])
 const loading = ref(false)
 const error = ref('')
+const searchQuery = ref('')
 
 // Fetch projects from API
-const fetchProjects = async () => {
+const fetchProjects = async (search?: string) => {
   try {
     loading.value = true
     error.value = ''
     
-    // Using the API service
-    const response = await projectsApi.getProjects()
+    // Using the API service with search parameter
+    const response = await projectsApi.getProjects(search)
     const projectsArray = response.data.projects
     projects.value = projectsArray.map((item: any) => ({
       id: item.id,
@@ -98,6 +99,16 @@ const formatDueDate = (dueDate: string | number) => {
   }
 }
 
+// Search functionality
+const handleSearch = () => {
+  fetchProjects(searchQuery.value.trim() || undefined)
+}
+
+const clearSearch = () => {
+  searchQuery.value = ''
+  fetchProjects()
+}
+
 // Fetch projects when component mounts
 onMounted(() => {
   fetchProjects()
@@ -118,6 +129,27 @@ onMounted(() => {
         </template>
         Add Project
       </n-button>
+    </div>
+
+    <!-- Search Bar -->
+    <div style="margin-bottom: 1rem;">
+      <n-input
+        v-model:value="searchQuery"
+        placeholder="Search projects..."
+        style="max-width: 400px;"
+        clearable
+        @keyup.enter="handleSearch"
+        @clear="clearSearch"
+      >
+        <template #prefix>
+          <n-icon><Search /></n-icon>
+        </template>
+        <template #suffix>
+          <n-button text @click="handleSearch" style="padding: 0;">
+            Search
+          </n-button>
+        </template>
+      </n-input>
     </div>
 
     <!-- Loading state -->
