@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { NCard, NGrid, NGridItem, NH2, NP, NTag, NSpin, NIcon, NImage, NButton } from 'naive-ui'
-import { Person, Calendar, Create } from '@vicons/ionicons5'
+import { Person, Calendar, Create, Add } from '@vicons/ionicons5'
 import { projectsApi } from '../../services/api'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../../composables/useAuth'
@@ -106,7 +106,19 @@ onMounted(() => {
 
 <template>
   <div>
-    <n-h2 style="text-align: center; margin-bottom: 1rem;">Projects</n-h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <n-h2 style="margin: 0;">Projects</n-h2>
+      <n-button 
+        v-if="user"
+        type="primary"
+        @click="router.push('/projects/add')"
+      >
+        <template #icon>
+          <n-icon><Add /></n-icon>
+        </template>
+        Add Project
+      </n-button>
+    </div>
 
     <!-- Loading state -->
     <div v-if="loading" style="text-align: center; padding: 2rem;">
