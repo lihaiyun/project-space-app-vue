@@ -49,7 +49,7 @@
                 placeholder="Select due date"
                 :disabled="submitting"
                 style="width: 100%;"
-                @update:value="dueDateAttrs['onUpdate:value']"
+                @update:value="val => (dueDate = val)"
                 @blur="dueDateAttrs.onBlur"
               />
             </n-form-item>
@@ -61,7 +61,7 @@
                 placeholder="Select project status"
                 :options="statusOptions"
                 :disabled="submitting"
-                @update:value="statusAttrs['onUpdate:value']"
+                @update:value="val => (status = val)"
                 @blur="statusAttrs.onBlur"
               />
             </n-form-item>
