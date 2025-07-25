@@ -122,7 +122,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { format, isValid } from 'date-fns'
+import { format, isValid, addMonths } from 'date-fns'
 import { CloudUpload } from '@vicons/ionicons5'
 import { 
   NCard, 
@@ -185,7 +185,7 @@ const { handleSubmit, errors, defineField } = useForm({
   initialValues: {
     name: '',
     description: '',
-    dueDate: new Date().getTime(),
+    dueDate: addMonths(new Date(), 1).getTime(),
     status: 'not-started',
     imageUrl: ''
   }
