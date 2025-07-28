@@ -125,6 +125,16 @@ export const useAuth = () => {
     }
   }
 
+  // Initialize auth (check if user is already logged in)
+  const initAuth = async () => {
+    try {
+      await getCurrentUser()
+    } catch (error) {
+      // If auth check fails, user is not authenticated
+      clearUser()
+    }
+  }
+
   return {
     // State
     user,
@@ -132,11 +142,10 @@ export const useAuth = () => {
     isAuthenticated,
     
     // Actions
-    login,
     register,
-    logout,
+    login,
     getCurrentUser,
-    setUser,
-    clearUser
+    logout,
+    initAuth
   }
 }
