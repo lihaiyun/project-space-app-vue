@@ -125,17 +125,6 @@ export const useAuth = () => {
     }
   }
 
-  // Initialize auth state (check if user is already logged in)
-  const initAuth = async () => {
-    try {
-      // Try to get current user from server (if cookie exists)
-      await getCurrentUser()
-    } catch (error) {
-      // User is not authenticated or cookie expired
-      clearUser()
-    }
-  }
-
   return {
     // State
     user,
@@ -147,7 +136,6 @@ export const useAuth = () => {
     register,
     logout,
     getCurrentUser,
-    initAuth,
     setUser,
     clearUser
   }

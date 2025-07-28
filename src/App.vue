@@ -2,13 +2,23 @@
 import { NConfigProvider, NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider, NButton, NIcon, NDropdown } from 'naive-ui'
 import { Home, FolderOpen, LogIn, PersonAdd, Person, LogOut } from '@vicons/ionicons5'
 import { useRouter, useRoute } from 'vue-router'
-import { h, watch, ref } from 'vue'
+import { h, watch, ref, onMounted } from 'vue'
 import { useAuth } from './composables/useAuth'
 import type { Component } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
-const { user, isAuthenticated, logout } = useAuth()
+const { user, isAuthenticated, logout, getCurrentUser } = useAuth()
+
+// Initialize authentication on app startup
+onMounted(async () => {
+  try {
+    await getCurrentUser()
+  } catch (error) {
+    // User is not authenticated, which is fine - they'll see login/register options
+    console.log('User not authenticated on app startup')
+  }
+})
 
 // Watch for authentication changes
 watch(isAuthenticated, (newVal) => {
