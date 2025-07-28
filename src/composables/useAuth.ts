@@ -142,10 +142,9 @@ export const useAuth = () => {
     isAuthenticated,
     
     // Actions
+    initAuth,
     register,
     login,
-    getCurrentUser,
-    logout,
-    initAuth
+    logout
   }
 }
